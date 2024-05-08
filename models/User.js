@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const jwt = require('jsonwebtoken');
+const { json } = require('express');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -39,7 +40,14 @@ userSchema.methods.toUserResponse = async function () {
   return {
     username: this.username,
     nickname: this.nickname,
-    favoriteSentences: this.favoriteSentences
+    favoriteSentences: this.favoriteSentences || []
+  }
+}
+
+userSchema.methods.toProfileJSON = async function () {
+  return {
+    username: this.username,
+    nickname: this.nickname
   }
 }
 

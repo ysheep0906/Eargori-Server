@@ -5,15 +5,19 @@ const bcrypt = require('bcrypt');
 const registerUser = asyncHandler(async (req, res) => {
   const { username, password, nickname } = req.body;
 
+  if (!nickname || !username || !password) {
+    return res.status(400).json({message: "All fields are required"});
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = {
+  const userObject = {
     "username": username,
     "password": hashedPassword,
     "nickname": nickname
   }
 
-  const createdUser = await User.create(user);
+  const createdUser = await User.create(userObject);
   
   if (createdUser) {
     res.status(201).json({
@@ -44,7 +48,7 @@ const userLogin = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    user : loginUser.toUserResponse()
+    user : loginUser.toUserResponse(),
   });
 
 });

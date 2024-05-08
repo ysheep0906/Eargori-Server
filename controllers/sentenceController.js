@@ -1,16 +1,18 @@
-const Sentence = require('../models/sentence');
-const User = require('../models/user');
+const Sentence = require('../models/Sentence');
+const User = require('../models/User');
 const asyncHandler = require('express-async-handler');
 
-// sentence를 만들고 이것을 mongodb에 저장하는 함수
+// 문장을 생성하는 함수
 const createSentence = asyncHandler(async (req, res) => {
-  const id = req.userId;
+  const id = req.body.userId; // 
 
   const author = await User.findById(id).exec();
 
-  const { sentence, replace, place } = req.body;
+  const { sentence, replace, place } = req.body.sentence;
   
   const newSentence = await Sentence.create({ sentence, replace, place });
+
+  newSentence.author = id;
 
   await newSentence.save();
 
@@ -19,8 +21,9 @@ const createSentence = asyncHandler(async (req, res) => {
   })
 });
 
+// 문장을 삭제하는 함수
 const deleteSentence = asyncHandler(async (req, res) => {
-  const id = req.userId;
+  const id = req.body.userId;
 
   const { sentence } = req.params;
 
@@ -42,8 +45,9 @@ const deleteSentence = asyncHandler(async (req, res) => {
   }
 });
 
+// 사용자가 해당 문장을 즐겨찾기에 추가하는 함수
 const favoriteSentence = asyncHandler(async (req, res) => {
-  const id = req.userId;
+  const id = req.body.userId;
 
   const { sentence } = req.params;
 
@@ -57,15 +61,16 @@ const favoriteSentence = asyncHandler(async (req, res) => {
     return res.status(401).json({ message : 'Sentence Not Found' });
   }
 
-  await loginUser.favoriteSentence(currentSentence._id);
+  await loginUser.favorite(currentSentence._id);
 
   return res.status(200).json({
     sentence: await currentSentence.toSentenceResponse()
    });
 });
 
+// 사용자가 해당 문장을 즐겨찾기에서 삭제하는 함수
 const unfavoriteSentence = asyncHandler(async (req, res) => {
-  const id = req.userId;
+  const id = req.body.userId;
 
   const { sentence } = req.params;
 
@@ -79,14 +84,57 @@ const unfavoriteSentence = asyncHandler(async (req, res) => {
     return res.status(401).json({ message : 'Sentence Not Found' });
   }
 
-  await loginUser.unfavoriteSentence(currentSentence._id);
+  await loginUser.unfavorite(currentSentence._id);
 
   return res.status(200).json({
     sentence: await currentSentence.toSentenceResponse()
   });
 });
 
+// 사용자가 작성한 문장을 가져오는 함수
+const getSentences = asyncHandler(async (req, res) => {
+  const id = req.body.userId;
+
+  const author = await User.findById(id).exec();
+  if (!author) {
+    return res.status(401).json({ message : "User Not Found" });
+  }
+
+  const userSentences = await Sentence.find({ author : author }).exec();
+  if(!userSentences) {
+    return res.status(401).json({ message : 'Sentence Not Found' });
+  }
+
+  return res.status(200).json({
+    sentences: userSentences
+  });
+});
+
+// 사용자가 작성한 문장 중 검색한 문장을 가져오는 함수
+const getSearchSentences = asyncHandler(async (req, res) => {
+  const id = req.body.userId;
+  const sentence = req.body.sentence;
+  const author = await User.findById(id).exec();
+  if (!author) {
+    return res.status(401).json({ message : "User Not Found" });
+  }
+
+  const userSentences = await Sentence.find({ 
+    author : author,
+    sentence: { $regex: sentence, $options: 'i' }
+
+   }).exec();
+
+  return res.status(200).json({ sentences: userSentences });
+});
+
+
+
 module.exports = {
   createSentence,
-  deleteSentence
+  deleteSentence,
+  favoriteSentence,
+  unfavoriteSentence,
+  getSentences,
+  getSearchSentences
 };

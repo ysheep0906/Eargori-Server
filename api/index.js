@@ -13,22 +13,24 @@ const connectDB = require('../config/dbConnect');
 dotenv.config();
 connectDB();
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
 app.use('/users', require('../routes/userRoute'));
 
-mongoose.connection.on('error', err => {
-  console.log(err);
-})
+app.use('/sentences', require('../routes/sentenceRoute'));
 
 mongoose.connection.once('open', () => {
   app.listen(process.env.PORT || port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${process.env.PORT}`);
   });
 });
 
-
+mongoose.connection.on('error', err => {
+  console.log(err);
+});
 
 module.exports = app;

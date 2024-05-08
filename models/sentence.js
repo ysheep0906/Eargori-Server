@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
-
+const User = require('./User');
 
 const sentenceSchema = new mongoose.Schema({
   author: {
@@ -23,9 +23,11 @@ const sentenceSchema = new mongoose.Schema({
 
 sentenceSchema.plugin(uniqueValidator);
 
-sentenceSchema.methods.toSentenceResponse = async function ( user ) {
+sentenceSchema.methods.toSentenceResponse = async function () {
   const authorObj = await User.findById(this.author).exec();
+  console.log(authorObj);
   return {
+    author: authorObj.toProfileJSON(),
     sentence: this.sentence,
     replace: this.replace,
     place: this.place
