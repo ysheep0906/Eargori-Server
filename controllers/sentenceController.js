@@ -38,6 +38,7 @@ const deleteSentence = asyncHandler(async (req, res) => {
   }
 
   if(currentSentence.author.toString() === loginUser._id.toString()) {
+    await loginUser.unfavorite(currentSentence._id);
     await Sentence.deleteOne({ sentence : sentence });
     return res.status(200).json({ message : 'Deleted' });
   } else {
@@ -49,8 +50,8 @@ const deleteSentence = asyncHandler(async (req, res) => {
 const favoriteSentence = asyncHandler(async (req, res) => {
   const id = req.userId;
 
-  const { sentence } = req.query;
-
+  const { sentence } = req.params;
+  
   const loginUser = await User.findById(id).exec();
   if (!loginUser) {
     return res.status(401).json({ message : "User Not Found" });
@@ -60,6 +61,8 @@ const favoriteSentence = asyncHandler(async (req, res) => {
   if(!currentSentence) {
     return res.status(401).json({ message : 'Sentence Not Found' });
   }
+
+  await currentSentence.favoriteTrue();
 
   await loginUser.favorite(currentSentence._id);
 
@@ -85,6 +88,7 @@ const unfavoriteSentence = asyncHandler(async (req, res) => {
   }
 
   await loginUser.unfavorite(currentSentence._id);
+  await currentSentence.favoriteFalse();
 
   return res.status(200).json({
     sentence: await currentSentence.toSentenceResponse()

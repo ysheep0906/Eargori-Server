@@ -7,9 +7,9 @@ router.post('/create', verifyJWT, sentenceController.createSentence);
 
 router.delete('/:sentence', verifyJWT, sentenceController.deleteSentence);
 
-router.post('/favorite', verifyJWT, sentenceController.favoriteSentence);
+router.post('/:sentence/favorite', verifyJWT, sentenceController.favoriteSentence);
 
-router.delete('/:sentence/favorite', verifyJWT, sentenceController.unfavoriteSentence);
+router.delete('/:sentence/unfavorite', verifyJWT, sentenceController.unfavoriteSentence);
 
 router.get('/', verifyJWT, sentenceController.getSentences);
 

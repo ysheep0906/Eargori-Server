@@ -18,6 +18,10 @@ const sentenceSchema = new mongoose.Schema({
   },
   place: {
     type: String,
+  },
+  favorite: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -40,5 +44,14 @@ sentenceSchema.methods.toSentenceJSON = async function () {
   }
 }
 
+sentenceSchema.methods.favoriteTrue = async function () {
+  this.favorite = true;
+  return this.save();
+}
+
+sentenceSchema.methods.favoriteFalse = async function () {
+  this.favorite = false;
+  return this.save();
+}
 
 module.exports = mongoose.model('Sentence', sentenceSchema);
