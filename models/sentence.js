@@ -27,11 +27,18 @@ sentenceSchema.methods.toSentenceResponse = async function () {
   const authorObj = await User.findById(this.author).exec();
   console.log(authorObj);
   return {
-    author: authorObj.toProfileJSON(),
+    author: await authorObj.toProfileJSON(),
     sentence: this.sentence,
     replace: this.replace,
     place: this.place
   }
 }
+
+sentenceSchema.methods.toSentenceJSON = async function () {
+  return {
+    sentence: this.sentence
+  }
+}
+
 
 module.exports = mongoose.model('Sentence', sentenceSchema);

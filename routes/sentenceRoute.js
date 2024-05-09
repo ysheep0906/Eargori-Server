@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const verifyJWT = require('../middlewares/verifyJWT');
 const sentenceController = require('../controllers/sentenceController');
 
-router.post('/create', sentenceController.createSentence);
+router.post('/create', verifyJWT, sentenceController.createSentence);
 
-router.delete('/:sentence', sentenceController.deleteSentence);
+router.delete('/:sentence', verifyJWT, sentenceController.deleteSentence);
 
-router.post('/favorite', sentenceController.favoriteSentence);
+router.post('/favorite', verifyJWT, sentenceController.favoriteSentence);
 
-router.delete('/:sentence/favorite', sentenceController.unfavoriteSentence);
+router.delete('/:sentence/favorite', verifyJWT, sentenceController.unfavoriteSentence);
 
-router.get('/', sentenceController.getSentences);
+router.get('/', verifyJWT, sentenceController.getSentences);
 
-router.post('/search', sentenceController.getSearchSentences);
+router.post('/search', verifyJWT, sentenceController.getSearchSentences);
 
 module.exports = router;

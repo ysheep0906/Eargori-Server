@@ -20,31 +20,36 @@ const userSchema = new mongoose.Schema({
   favoriteSentences: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Sentence'
+  }],
+  places: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Place'
   }]
 });
 
 userSchema.plugin(uniqueValidator);
 
-userSchema.methods.generateToken = async function () {
-  const user = this;
+userSchema.methods.generateToken = function () {
   const accessToken = jwt.sign({
     "user" : {
-      "username" : this.username,
+      "id" : this._id,
       "password" : this.password,
     }
-  }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+  }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' });
   return accessToken;
 }
 
-userSchema.methods.toUserResponse = async function () {
+userSchema.methods.toUserResponse = function () {
   return {
     username: this.username,
     nickname: this.nickname,
-    favoriteSentences: this.favoriteSentences || []
+    favoriteSentences: this.favoriteSentences || [],
+    places: this.places || [],
+    token: this.generateToken()
   }
 }
 
-userSchema.methods.toProfileJSON = async function () {
+userSchema.methods.toProfileJSON = function () {
   return {
     username: this.username,
     nickname: this.nickname
@@ -63,6 +68,31 @@ userSchema.methods.unfavorite = function (id) {
     this.favoriteSentences.remove(id);
   }
   return this.save();
+}
+
+userSchema.methods.savePlace = function (id) {
+  if (this.places.indexOf(id) === -1) {
+    this.places.push(id);
+  }
+  return this.save();
+}
+
+userSchema.methods.removePlace = function (id) {
+  if (this.places.indexOf(id) !== -1) {
+    this.places.remove(id);
+  }
+  return this.save();
+}
+
+userSchema.methods.searchPlace = function (place) {
+  // place 모델 안에 place 요소가 같은지 확인하고 id return
+  for (const p in this.places) {
+    if (p.place === place) {
+      return place._id;
+    }
+  }
+
+  return null;
 }
 
 module.exports = mongoose.model('User', userSchema);

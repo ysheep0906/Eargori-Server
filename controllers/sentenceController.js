@@ -4,11 +4,11 @@ const asyncHandler = require('express-async-handler');
 
 // 문장을 생성하는 함수
 const createSentence = asyncHandler(async (req, res) => {
-  const id = req.body.userId; // 
+  const id = req.userId; // 
 
   const author = await User.findById(id).exec();
 
-  const { sentence, replace, place } = req.body.sentence;
+  const { sentence, replace, place } = req.body;
   
   const newSentence = await Sentence.create({ sentence, replace, place });
 
@@ -23,7 +23,7 @@ const createSentence = asyncHandler(async (req, res) => {
 
 // 문장을 삭제하는 함수
 const deleteSentence = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.userId;
 
   const { sentence } = req.params;
 
@@ -47,9 +47,9 @@ const deleteSentence = asyncHandler(async (req, res) => {
 
 // 사용자가 해당 문장을 즐겨찾기에 추가하는 함수
 const favoriteSentence = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.userId;
 
-  const { sentence } = req.params;
+  const { sentence } = req.query;
 
   const loginUser = await User.findById(id).exec();
   if (!loginUser) {
@@ -70,7 +70,7 @@ const favoriteSentence = asyncHandler(async (req, res) => {
 
 // 사용자가 해당 문장을 즐겨찾기에서 삭제하는 함수
 const unfavoriteSentence = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.userId;
 
   const { sentence } = req.params;
 
@@ -93,7 +93,7 @@ const unfavoriteSentence = asyncHandler(async (req, res) => {
 
 // 사용자가 작성한 문장을 가져오는 함수
 const getSentences = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.userId;
 
   const author = await User.findById(id).exec();
   if (!author) {
@@ -112,7 +112,7 @@ const getSentences = asyncHandler(async (req, res) => {
 
 // 사용자가 작성한 문장 중 검색한 문장을 가져오는 함수
 const getSearchSentences = asyncHandler(async (req, res) => {
-  const id = req.body.userId;
+  const id = req.userId;
   const sentence = req.body.sentence;
   const author = await User.findById(id).exec();
   if (!author) {

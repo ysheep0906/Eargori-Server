@@ -15,13 +15,13 @@ connectDB();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 app.use('/users', require('../routes/userRoute'));
 
 app.use('/sentences', require('../routes/sentenceRoute'));
+
+app.use('/places', require('../routes/placeRoute'));
+
+app.use('/articles', require('../routes/articleRoute'));
 
 mongoose.connection.once('open', () => {
   app.listen(process.env.PORT || port, () => {
