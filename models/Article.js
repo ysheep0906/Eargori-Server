@@ -20,7 +20,10 @@ const articleSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  username: {
+    type: String
+  },
 },  { timestamps: true
 });
 
@@ -33,8 +36,10 @@ articleSchema.methods.toArticleResponse = async function() {
     title: this.title,
     description: this.description,
     content: await contentObj.toPlaceResponse(),
-    favoriteCount: this.favoriteCount,
-    author: await authorObj._id
+    author: await authorObj._id,
+    username: await authorObj.username,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
   }
 }
 

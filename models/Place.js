@@ -30,6 +30,7 @@ placeSchema.methods.toPlaceResponse = async function () {
 //장소에 문장을 추가하는 함수
 placeSchema.methods.insertSentence = async function (id) {
   if (this.sentences.indexOf(id) === -1) {
+    console.log(id);
     this.sentences.push(id);
   }
   return this.save();

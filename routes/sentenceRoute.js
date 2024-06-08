@@ -7,12 +7,16 @@ router.post('/create', verifyJWT, sentenceController.createSentence);
 
 router.delete('/:sentence', verifyJWT, sentenceController.deleteSentence);
 
-router.post('/:sentence/favorite', verifyJWT, sentenceController.favoriteSentence);
+router.get('/favorite', verifyJWT, sentenceController.getFavoriteSentences);
 
-router.delete('/:sentence/unfavorite', verifyJWT, sentenceController.unfavoriteSentence);
+router.post('/favorite', verifyJWT, sentenceController.favoriteSentence);
+
+router.post('/unfavorite', verifyJWT, sentenceController.unfavoriteSentence);
 
 router.get('/', verifyJWT, sentenceController.getSentences);
 
 router.post('/search', verifyJWT, sentenceController.getSearchSentences);
+
+router.get('/ids', verifyJWT, sentenceController.getSentencesByIds);
 
 module.exports = router;

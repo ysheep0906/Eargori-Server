@@ -86,9 +86,9 @@ userSchema.methods.removePlace = function (id) {
 
 userSchema.methods.searchPlace = function (place) {
   // place 모델 안에 place 요소가 같은지 확인하고 id return
-  for (const p in this.places) {
-    if (p.place === place) {
-      return place._id;
+  for (let i = 0; i < this.places.length; i++) {
+    if (this.places[i].toString() === place) {
+      return this.places[i].toString();
     }
   }
 

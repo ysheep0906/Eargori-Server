@@ -5,7 +5,7 @@ const articleController = require('../controllers/articleController');
 
 router.post('/create', verifyJWT, articleController.createArticle);
 
-router.delete('/:title', verifyJWT, articleController.deleteArticle);
+router.delete('/', verifyJWT, articleController.deleteArticle);
 
 router.get('/list', verifyJWT, articleController.getArticles);
 

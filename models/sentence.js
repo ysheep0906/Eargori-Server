@@ -12,12 +12,9 @@ const sentenceSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  replace: {
-    type: String,
-    required: true
-  },
   place: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Place'
   },
   favorite: {
     type: Boolean,
@@ -33,8 +30,6 @@ sentenceSchema.methods.toSentenceResponse = async function () {
   return {
     author: await authorObj.toProfileJSON(),
     sentence: this.sentence,
-    replace: this.replace,
-    place: this.place
   }
 }
 
