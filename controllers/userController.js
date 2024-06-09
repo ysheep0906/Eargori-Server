@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Place = require('../models/Place');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
@@ -23,6 +24,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const createdUser = await User.create(userObject);
+  
   
   if (createdUser) {
     res.status(201).json({

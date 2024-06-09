@@ -5,7 +5,7 @@ const sentenceController = require('../controllers/sentenceController');
 
 router.post('/create', verifyJWT, sentenceController.createSentence);
 
-router.delete('/:sentence', verifyJWT, sentenceController.deleteSentence);
+router.delete('/', verifyJWT, sentenceController.deleteSentence);
 
 router.get('/favorite', verifyJWT, sentenceController.getFavoriteSentences);
 

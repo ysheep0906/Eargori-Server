@@ -10,7 +10,6 @@ const placeSchema = new mongoose.Schema({
   place: {
     type: String,
     required: true,
-    unique: true
   },
   sentences: [{
     type: mongoose.Schema.Types.ObjectId,

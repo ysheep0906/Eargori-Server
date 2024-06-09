@@ -39,7 +39,7 @@ const createSentence = asyncHandler(async (req, res) => {
 const deleteSentence = asyncHandler(async (req, res) => {
   const id = req.userId;
 
-  const { sentence } = req.params;
+  const { sentence } = req.body;
 
   const loginUser = await User.findById(id).exec();
   if (!loginUser) {

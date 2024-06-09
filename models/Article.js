@@ -37,7 +37,7 @@ articleSchema.methods.toArticleResponse = async function() {
     description: this.description,
     content: await contentObj.toPlaceResponse(),
     author: await authorObj._id,
-    username: await authorObj.username,
+    username: await authorObj.nickname,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   }
@@ -54,4 +54,3 @@ articleSchema.methods.updateFavoriteCount = async function () {
 }
 
 module.exports = mongoose.model('Article', articleSchema);
-
